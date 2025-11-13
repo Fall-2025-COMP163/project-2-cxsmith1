@@ -1,3 +1,39 @@
+Skip to content
+Navigation Menu
+Fall-2025-COMP163
+project-2-cxsmith1
+
+Type / to search
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+Files
+Go to file
+t
+.github
+tests
+README.md
+project2_starter.py
+project2main
+project-2-cxsmith1
+/project2main
+cxsmith1
+cxsmith1
+Update project2main
+4d170e8
+ · 
+6 minutes ago
+
+Code
+
+Blame
+227 lines (194 loc) · 7.28 KB
 """
 COMP 163 - Project 2: Character Abilities Showcase
 Name: Caleb Smith
@@ -225,3 +261,4 @@ if __name__ == "__main__":
     print("\n⚔️ Battle Demo:")
     battle = SimpleBattle(warrior, mage)
     battle.fight()
+project-2-cxsmith1/project2main at main · Fall-2025-COMP163/project-2-cxsmith10 results 
