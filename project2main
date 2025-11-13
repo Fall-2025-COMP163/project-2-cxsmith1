@@ -42,112 +42,144 @@ class SimpleBattle:
             print("🤝 It's a tie!")
 
 # =====================================================================
-# CHARACTER CLASSES
+# YOUR CLASSES TO IMPLEMENT (6 CLASSES TOTAL)
 # =====================================================================
 
 class Character:
-    """Base class for all characters."""
-
+    """
+    Base class for all characters.
+    """
     def __init__(self, name, health, strength, magic):
+        # initialize instance variables exactly as tests expect
         self.name = name
         self.health = health
         self.strength = strength
         self.magic = magic
+        # optional weapon (None until assigned)
+        self.weapon = None
 
     def attack(self, target):
-        damage = self.strength
+        """
+        Basic attack: damage based on strength plus weapon bonus if present.
+        """
+        bonus = self.weapon.damage_bonus if (self.weapon is not None) else 0
+        damage = self.strength + bonus
         target.take_damage(damage)
         print(f"{self.name} attacks {target.name} for {damage} damage!")
 
     def take_damage(self, damage):
+        """
+        Reduce health, never below 0.
+        """
         self.health -= damage
         if self.health < 0:
             self.health = 0
 
     def display_stats(self):
-        print(f"Name: {self.name}\nHealth: {self.health}\nStrength: {self.strength}\nMagic: {self.magic}")
-
-# =====================================================================
-# PLAYER BASE CLASS
-# =====================================================================
+        """
+        Prints basic stats.
+        """
+        print(f"Name: {self.name}")
+        print(f"Health: {self.health}")
+        print(f"Strength: {self.strength}")
+        print(f"Magic: {self.magic}")
+        if self.weapon is not None:
+            print(f"Weapon: {self.weapon.name} (+{self.weapon.damage_bonus})")
 
 class Player(Character):
-    """Base class for playable characters."""
-
+    """
+    Player base class (inherits Character).
+    """
     def __init__(self, name, character_class, health, strength, magic):
         super().__init__(name, health, strength, magic)
         self.character_class = character_class
         self.level = 1
-        self.xp = 0
+        self.experience = 0
 
     def display_stats(self):
+        """
+        Extend Character.display_stats with player info.
+        """
         super().display_stats()
-        print(f"Class: {self.character_class}, Level: {self.level}, XP: {self.xp}")
-
-# =====================================================================
-# SUBCLASSES
-# =====================================================================
+        print(f"Class: {self.character_class}")
+        print(f"Level: {self.level}")
+        print(f"Experience: {self.experience}")
 
 class Warrior(Player):
-    """Strong physical fighter."""
-
+    """
+    Warrior - strong physical fighter.
+    """
     def __init__(self, name):
+        # As prompt: health=120, strength=15, magic=5
         super().__init__(name, "Warrior", 120, 15, 5)
 
     def attack(self, target):
-        damage = self.strength + 5
+        # Slightly stronger base attack for warrior
+        bonus = self.weapon.damage_bonus if (self.weapon is not None) else 0
+        damage = (self.strength + 5) + bonus
         target.take_damage(damage)
         print(f"{self.name} slashes {target.name} for {damage} damage!")
 
-    def super_slash(self, target):
-        damage = self.strength + 15
+    def power_strike(self, target):
+        # powerful special ability
+        bonus = self.weapon.damage_bonus if (self.weapon is not None) else 0
+        damage = (self.strength + 15) + bonus
         target.take_damage(damage)
-        print(f"{self.name} uses Super Slash on {target.name} for {damage} damage!")
+        print(f"{self.name} uses Power Strike on {target.name} for {damage} damage!")
 
 class Mage(Player):
-    """Magical spellcaster."""
-
+    """
+    Mage - magic-based fighter.
+    """
     def __init__(self, name):
+        # As prompt: health=80, strength=8, magic=20
         super().__init__(name, "Mage", 80, 8, 20)
 
     def attack(self, target):
-        damage = self.magic
+        # Use magic for damage
+        bonus = self.weapon.damage_bonus if (self.weapon is not None) else 0
+        damage = self.magic + bonus
         target.take_damage(damage)
         print(f"{self.name} casts a spell on {target.name} for {damage} damage!")
 
-    def spirit_nuke(self, target):
-        damage = self.magic + 10
+    def fireball(self, target):
+        # special magic attack
+        bonus = self.weapon.damage_bonus if (self.weapon is not None) else 0
+        damage = (self.magic + 10) + bonus
         target.take_damage(damage)
-        print(f"{self.name} launches a Spirit Nuke at {target.name} for {damage} damage!")
+        print(f"{self.name} launches Fireball at {target.name} for {damage} damage!")
 
 class Rogue(Player):
-    """Sneaky fighter with critical hits."""
-
+    """
+    Rogue - chance for critical hits.
+    """
     def __init__(self, name):
+        # As prompt: health=90, strength=12, magic=10
         super().__init__(name, "Rogue", 90, 12, 10)
 
     def attack(self, target):
-        crit = random.randint(1, 10)
-        if crit <= 3:
-            damage = self.strength * 2
+        # 30% chance for critical hit (double damage)
+        bonus = self.weapon.damage_bonus if (self.weapon is not None) else 0
+        crit_roll = random.randint(1, 10)
+        if crit_roll <= 3:
+            damage = (self.strength * 2) + bonus
             print(f"💥 Critical hit!")
         else:
-            damage = self.strength
+            damage = self.strength + bonus
         target.take_damage(damage)
-        print(f"{self.name} stabs {target.name} for {damage} damage!")
+        print(f"{self.name} attacks {target.name} for {damage} damage!")
 
-    def eye_poke(self, target):
-        damage = self.strength * 2
+    def sneak_attack(self, target):
+        # guaranteed critical-like damage
+        bonus = self.weapon.damage_bonus if (self.weapon is not None) else 0
+        damage = (self.strength * 2) + bonus
         target.take_damage(damage)
-        print(f"{self.name} pokes {target.name}'s eyes for {damage} damage!")
-
-# =====================================================================
-# COMPOSITION CLASS
-# =====================================================================
+        print(f"{self.name} performs Sneak Attack on {target.name} for {damage} damage!")
 
 class Weapon:
-    """Weapon class to demonstrate composition."""
-
+    """
+    Weapon class for composition.
+    """
     def __init__(self, name, damage_bonus):
         self.name = name
         self.damage_bonus = damage_bonus
@@ -156,50 +188,40 @@ class Weapon:
         print(f"Weapon: {self.name}, Damage Bonus: {self.damage_bonus}")
 
 # =====================================================================
-# MAIN TESTING
+# MAIN - simple demonstration (safe to keep)
 # =====================================================================
 
 if __name__ == "__main__":
-    print("=== CHARACTER ABILITIES SHOWCASE ===")
-    print("Testing inheritance, polymorphism, and method overriding")
-    print("=" * 50)
-
-    warrior = Warrior("Zygor")
-    mage = Mage("Parlay")
-    rogue = Rogue("LeBomb Stanks")
+    # Basic smoke test so you can run a local sanity check
+    warrior = Warrior("Marcus")
+    mage = Mage("Aria")
+    rogue = Rogue("Shadow")
 
     print("\n📊 Character Stats:")
     warrior.display_stats()
     mage.display_stats()
     rogue.display_stats()
 
-    print("\n⚔️ Testing Polymorphism (same attack method, different behavior):")
-    dummy_target = Character("Target Dummy", 100, 0, 0)
+    print("\n⚔️ Polymorphism test:")
+    dummy = Character("Dummy", 100, 0, 0)
+    for c in [warrior, mage, rogue]:
+        c.attack(dummy)
+        dummy.health = 100
 
-    for character in [warrior, mage, rogue]:
-        print(f"\n{character.name} attacks the dummy:")
-        character.attack(dummy_target)
-        dummy_target.health = 100
+    print("\n✨ Special abilities:")
+    t1 = Character("Enemy1", 50, 0, 0)
+    t2 = Character("Enemy2", 50, 0, 0)
+    t3 = Character("Enemy3", 50, 0, 0)
+    warrior.power_strike(t1)
+    mage.fireball(t2)
+    rogue.sneak_attack(t3)
 
-    print("\n Testing Special Abilities:")
-    target1 = Character("Enemy1", 50, 0, 0)
-    target2 = Character("Enemy2", 50, 0, 0)
-    target3 = Character("Enemy3", 50, 0, 0)
-
-    warrior.super_slash(target1)
-    mage.spirit_nuke(target2)
-    rogue.eye_poke(target3)
-
-    print("\n🗡️ Testing Weapon Composition:")
+    print("\n🗡️ Weapon test:")
     sword = Weapon("Iron Sword", 10)
-    staff = Weapon("Magic Staff", 15)
-    dagger = Weapon("Steel Dagger", 8)
     sword.display_info()
-    staff.display_info()
-    dagger.display_info()
+    warrior.weapon = sword
+    warrior.display_stats()
 
-    print("\n⚔️ Testing Battle System:")
+    print("\n⚔️ Battle Demo:")
     battle = SimpleBattle(warrior, mage)
     battle.fight()
-
-    print("\n✅ Testing complete!")
